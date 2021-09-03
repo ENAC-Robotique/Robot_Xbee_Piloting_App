@@ -67,6 +67,10 @@ class JoystickMode extends StatelessWidget {
                   }
                 }
                 _consOmega = pow(_consOmega / 90, 5) * 100;
+                //------OR
+                _consSpeed = getSpeed(degrees, distance);
+                _consOmega = getOmega(degrees, distance);
+                //
                 //print("Deg: $degrees Dist: $distance");
                 print("Speed: $_consSpeed Omega: $_consOmega");
                 serial.sendString("j $_consSpeed $_consOmega");
@@ -81,4 +85,11 @@ class JoystickMode extends StatelessWidget {
       ),
     );
   }
+}
+double getSpeed(double degrees, double distance) {
+  return distance * cos(degrees * pi / 180);
+}
+
+double getOmega(double degrees, double distance) {
+  return distance * sin(degrees * pi / 180);
 }
