@@ -1,4 +1,6 @@
+//import 'dart:ffi';
 import 'dart:math';
+import 'dart:developer';
 
 import 'package:call_saver/robot.dart';
 import 'package:call_saver/serial/Serial.dart';
@@ -42,7 +44,7 @@ class JoystickMode extends StatelessWidget {
                   timeBetweenMessages) {
                 serial.sendString("o");
                 double _consOmega;
-                double _consSpeed = pow(distance, 5) * 1000;
+                double _consSpeed = pow(distance, 1) * 25000;
                 double _errAngle = robot.angle - degrees;
                 /*if (degrees <= 180) {
                   _consOmega = -degrees / 2;
@@ -66,10 +68,16 @@ class JoystickMode extends StatelessWidget {
                     _consOmega = _errAngle / 2;
                   }
                 }
-                _consOmega = pow(_consOmega / 90, 5) * 100;
+                _consOmega = pow(_consOmega / 90, 5) * 10000;
                 //print("Deg: $degrees Dist: $distance");
-                print("Speed: $_consSpeed Omega: $_consOmega");
+                //print("Speed: $_consSpeed Omega: $_consOmega");
+                //------OR
+                _consSpeed = getSpeed(degrees, distance) * 2500;
+                _consOmega = getOmega(degrees, distance) * 50;
+                //
                 serial.sendString("j $_consSpeed $_consOmega");
+                print("j $_consSpeed $_consOmega");
+
                 lastMessageSendTime = DateTime.now().millisecondsSinceEpoch;
               }
             },
@@ -81,4 +89,12 @@ class JoystickMode extends StatelessWidget {
       ),
     );
   }
+}
+
+double getSpeed(double degrees, double distance) {
+  return distance * cos(degrees * pi / 180);
+}
+
+double getOmega(double degrees, double distance) {
+  return distance * sin(degrees * pi / 180);
 }
